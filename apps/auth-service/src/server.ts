@@ -1,8 +1,15 @@
-import app from "./app";
-import { env } from "./config/env";
+import app from "./app.js";
+import connectDB from "./config/database.js";
+import { env } from "./config/env.js";
+import logger from "./logger/logger.js";
 
-const PORT = env.PORT;
+try {
+  const PORT = env.PORT;
 
-app.listen(PORT, () => {
-  console.log(`Server started and running on ${PORT}`);
-});
+  await connectDB();
+  app.listen(PORT);
+  logger.info(`listening on ${PORT}`);
+} catch (error) {
+  logger.error(error);
+  process.exit(1);
+}
